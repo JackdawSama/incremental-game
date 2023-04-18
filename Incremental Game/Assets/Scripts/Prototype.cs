@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class Prototype : MonoBehaviour
 {
@@ -23,6 +24,9 @@ public class Prototype : MonoBehaviour
     [SerializeField] Button buyIc;
     [SerializeField] Button buyProcessingUnits;
 
+    [Header("Text References")]
+    [SerializeField] TextMeshProUGUI computeText;
+
     [Header("Units Count")]
     [SerializeField] int transistorCount = 0;
     [SerializeField] int gatesCount = 0;
@@ -31,20 +35,37 @@ public class Prototype : MonoBehaviour
 
     void Start()
     {
-        currentCompute = baseCompute;   
+        currentCompute = baseCompute;
+        buyTransistor.interactable = false; 
     }
 
-    void Compute()
+    void Update()
+    {
+        if(totalCompute >= 100)
+        {
+            buyTransistor.interactable = true;
+        }
+        else
+        {
+            buyTransistor.interactable = false;
+        }
+
+        UpdateUI();
+    }
+
+    void UpdateUI()
+    {
+        computeText.text = totalCompute.ToString() + "bits";
+    }
+    public void Compute()
     {
         totalCompute += currentCompute;
     }
 
-    void UpgradeCompute(string value)
+    public void BuyTransistor()
     {
-        if(value == "Transistor")
-        {
-            transistorCount++;
-            currentCompute = Mathf.Pow(transistorIncrement, transistorCount) * baseCompute;
-        }
+        transistorCount++;
+        currentCompute = Mathf.Pow(transistorIncrement, transistorCount) * baseCompute;
+        totalCompute -= 100;
     }
 }
