@@ -30,21 +30,21 @@ public class Prototype : MonoBehaviour
 
 
     [Header("Timer Variables")]
-    [SerializeField] float handTimer;
+    float handTimer;
     [SerializeField] float handCooldown;
-    [SerializeField] float transistorTimer;
+    float transistorTimer;
     [SerializeField] float transistorCooldown;
-    [SerializeField] float gatesTimer;
+    float gatesTimer;
     [SerializeField] float gatesCooldown;
-    [SerializeField] float icTimer;
+    float icTimer;
     [SerializeField] float icCooldown;
-    [SerializeField] float microprocessorTimer;
+    float microprocessorTimer;
     [SerializeField] float microprocessorCooldown;
-    [SerializeField] float cpuTimer;
+    float cpuTimer;
     [SerializeField] float cpuCooldown;
-    [SerializeField] float gpuTimer;
+    float gpuTimer;
     [SerializeField] float gpuCooldown;
-    [SerializeField] float gpuFarmTimer;
+    float gpuFarmTimer;
     [SerializeField] float gpuFarmCooldown;
 
     [Header("Cost Variables")]
@@ -75,6 +75,7 @@ public class Prototype : MonoBehaviour
     [SerializeField] Button buyGpuFarms;
 
     [Header("Slider References")]
+    [SerializeField] Slider handSlider;
     [SerializeField] Slider transistorSlider;
     [SerializeField] Slider gatesSlider;
     [SerializeField] Slider icSlider;
@@ -86,6 +87,14 @@ public class Prototype : MonoBehaviour
     [Header("Compute Text References")]
     [SerializeField] TextMeshProUGUI totalText;
     [SerializeField] TextMeshProUGUI currentComputeText;
+    [SerializeField] TextMeshProUGUI transistorCountText;
+    [SerializeField] TextMeshProUGUI gatesCountText;
+    [SerializeField] TextMeshProUGUI icCountText;
+    [SerializeField] TextMeshProUGUI microprocessorCountText;
+    [SerializeField] TextMeshProUGUI cpuCountText;
+    [SerializeField] TextMeshProUGUI gpuCountText;
+    [SerializeField] TextMeshProUGUI gpuFarmCountText;
+
 
     [Header("Units Count")]
     [SerializeField] int transistorCount = 0;
@@ -119,7 +128,34 @@ public class Prototype : MonoBehaviour
         gpuFarmLive = false;
 
         //Set checks
-        handCheck = false;
+        handCheck = true;
+
+        //Set All Buttons to Inactive
+        buyTransistor.gameObject.SetActive(false);
+        buyGates.gameObject.SetActive(false);
+        buyIc.gameObject.SetActive(false);
+        buyMicroprocessors.gameObject.SetActive(false);
+        buyCpus.gameObject.SetActive(false);
+        buyGpus.gameObject.SetActive(false);
+        buyGpuFarms.gameObject.SetActive(false);
+
+        //Set All Sliders to Inactive
+        transistorSlider.gameObject.SetActive(false);
+        gatesSlider.gameObject.SetActive(false);
+        icSlider.gameObject.SetActive(false);
+        microprocessorSlider.gameObject.SetActive(false);
+        cpuSlider.gameObject.SetActive(false);
+        gpuSlider.gameObject.SetActive(false);
+        gpuFarmSlider.gameObject.SetActive(false);
+
+        //Set All Count Text to Inactive
+        transistorCountText.gameObject.SetActive(false);
+        gatesCountText.gameObject.SetActive(false);
+        icCountText.gameObject.SetActive(false);
+        microprocessorCountText.gameObject.SetActive(false);
+        cpuCountText.gameObject.SetActive(false);
+        gpuCountText.gameObject.SetActive(false);
+        gpuFarmCountText.gameObject.SetActive(false);
 
         //Set all button interactability to false
         buyTransistor.interactable = false;
@@ -131,6 +167,7 @@ public class Prototype : MonoBehaviour
         buyGpuFarms.interactable = false;
 
         //Set UI Sliders Min Val
+        handSlider.minValue = 0;
         transistorSlider.minValue = 0;
         gatesSlider.minValue = 0;
         icSlider.minValue = 0;
@@ -140,6 +177,7 @@ public class Prototype : MonoBehaviour
         gpuFarmSlider.minValue = 0;
 
         //Set UI Sliders Max Val
+        handSlider.maxValue = handCooldown;
         transistorSlider.maxValue = transistorCooldown;
         gatesSlider.maxValue = gatesCooldown;
         icSlider.maxValue = icCooldown;
@@ -151,12 +189,20 @@ public class Prototype : MonoBehaviour
 
     void Update()
     {
+        ActivateUI();
         CostsCheck();
+        ComputeHandler();
         UpdateUI();
 
         if(!handCheck)
         {
             handTimer += Time.deltaTime;
+        }
+
+        if(handTimer >= handCooldown)
+        {
+            handCheck = true;
+            handTimer = 0;
         }
     }
 
@@ -177,6 +223,7 @@ public class Prototype : MonoBehaviour
     void UpdateUI()
     {
         //Update UI Sliders
+        handSlider.value = handTimer;
         transistorSlider.value = transistorTimer;
         gatesSlider.value = gatesTimer;
         icSlider.value = icTimer;
@@ -185,10 +232,18 @@ public class Prototype : MonoBehaviour
         gpuSlider.value = gpuTimer;
         gpuFarmSlider.value = gpuFarmTimer;
 
-        //Update UI Text
+        //Update Data Text
         totalText.text = totalCompute.ToString();
         currentComputeText.text = currentCompute.ToString();
 
+        //Update Count Text
+        transistorCountText.text = transistorCount.ToString();
+        gatesCountText.text = gatesCount.ToString();
+        icCountText.text = icCount.ToString();
+        microprocessorCountText.text = microprocessorCount.ToString();
+        cpuCountText.text = cpuCount.ToString();
+        gpuCountText.text = gpuCount.ToString();
+        gpuFarmCountText.text = gpuFarmCount.ToString();
     }
 
     public void ComputeHandler()
@@ -433,6 +488,58 @@ public class Prototype : MonoBehaviour
         }
     }
 
+    public void ActivateUI()
+    {
+        if(totalCompute == transistorCost)
+        {
+            buyTransistor.gameObject.SetActive(true);
+            transistorSlider.gameObject.SetActive(true);
+            transistorCountText.gameObject.SetActive(true);
+        }
+
+        if(totalCompute == gatesCost)
+        {
+            buyGates.gameObject.SetActive(true);
+            gatesSlider.gameObject.SetActive(true);
+            gatesCountText.gameObject.SetActive(true);
+        }
+
+        if(totalCompute == icCost)
+        {
+            buyIc.gameObject.SetActive(true);
+            icSlider.gameObject.SetActive(true);
+            icCountText.gameObject.SetActive(true);
+        }
+
+        if(totalCompute == microprocessorCost)
+        {
+            buyMicroprocessors.gameObject.SetActive(true);
+            microprocessorSlider.gameObject.SetActive(true);
+            microprocessorCountText.gameObject.SetActive(true);
+        }
+
+        if(totalCompute == cpuCost)
+        {
+            buyCpus.gameObject.SetActive(true);
+            cpuSlider.gameObject.SetActive(true);
+            cpuCountText.gameObject.SetActive(true);
+        }
+
+        if(totalCompute == gpuCost)
+        {
+            buyGpus.gameObject.SetActive(true);
+            gpuSlider.gameObject.SetActive(true);
+            gpuCountText.gameObject.SetActive(true);
+        }
+
+        if(totalCompute == gpuFarmCost)
+        {
+            buyGpuFarms.gameObject.SetActive(true);
+            gpuFarmSlider.gameObject.SetActive(true);
+            gpuFarmCountText.gameObject.SetActive(true);
+        }
+    }
+
     public void BuyTransistor()
     {
         transistorCount++;
@@ -512,17 +619,16 @@ public class Prototype : MonoBehaviour
 
     public void HandCompute()
     {
-        if(handTimer >= handCooldown)
+        if(handCheck)
         {
-            handCheck = true;
-
+            handCheck = false;
+            
             //Compute
             currentCompute += handCompute;
-            totalCompute += currentCompute;
+            totalCompute = currentCompute;
 
             //reset timer
             handTimer = 0;
-            handCheck = false;
         }
     }
 
@@ -530,7 +636,7 @@ public class Prototype : MonoBehaviour
     {
         //Compute
         currentCompute += transistorCompute * transistorCount;
-        totalCompute += currentCompute;
+        totalCompute += transistorCompute * transistorCount;
 
         //reset timer
         transistorTimer = 0;
@@ -540,7 +646,7 @@ public class Prototype : MonoBehaviour
     {
         //Compute
         currentCompute += gatesCompute * gatesCount;
-        totalCompute += currentCompute;
+        totalCompute += gatesCompute * gatesCount;
 
         //reset timer
         gatesTimer = 0;
@@ -550,7 +656,7 @@ public class Prototype : MonoBehaviour
     {
         //Compute
         currentCompute += icCompute * icCount;
-        totalCompute += currentCompute;
+        totalCompute += icCompute * icCount;
 
         //reset timer
         icTimer = 0;
@@ -560,7 +666,7 @@ public class Prototype : MonoBehaviour
     {
         //Compute
         currentCompute += microprocessorCompute * microprocessorCount;
-        totalCompute += currentCompute;
+        totalCompute += microprocessorCompute * microprocessorCount;
 
         //reset timer
         microprocessorTimer = 0;
@@ -570,14 +676,14 @@ public class Prototype : MonoBehaviour
     {
         //Compute
         currentCompute += cpuCompute * cpuCount;
-        totalCompute += currentCompute;
+        totalCompute += cpuCompute * cpuCount;
     }
 
     private void GPUCompute()
     {
         //Compute
         currentCompute += gpuCompute * gpuCount;
-        totalCompute += currentCompute;
+        totalCompute += gpuCompute;
 
         //reset timer
         gpuTimer = 0;
@@ -587,7 +693,7 @@ public class Prototype : MonoBehaviour
     {
         //Compute
         currentCompute += gpuFarmCompute * gpuFarmCount;
-        totalCompute += currentCompute;
+        totalCompute += gpuFarmCompute * gpuFarmCount;
 
         //reset timer
         gpuFarmTimer = 0;
