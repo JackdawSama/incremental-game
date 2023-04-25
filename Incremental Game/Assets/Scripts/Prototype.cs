@@ -437,42 +437,77 @@ public class Prototype : MonoBehaviour
     {
         transistorCount++;
         currentCompute -= transistorCost;
+
+        if(transistorCount == 1)
+        {
+            computeState = ComputeLevel.Lvl1;
+        }
     }
 
     public void BuyGates()
     {
         gatesCount++;
         currentCompute -= gatesCost;
+
+        if(gatesCount == 1)
+        {
+            computeState = ComputeLevel.Lvl2;
+        }
     }
 
     public void BuyIC()
     {
         icCount++;
         currentCompute -= icCost;
+
+        if(icCount == 1)
+        {
+            computeState = ComputeLevel.Lvl3;
+        }
     }
 
     public void BuyMicroprocessor()
     {
         microprocessorCount++;
         currentCompute -= microprocessorCost;
+
+        if(microprocessorCount == 1)
+        {
+            computeState = ComputeLevel.Lvl4;
+        }
     }
 
     public void BuyCPU()
     {
         cpuCount++;
         currentCompute -= cpuCost;
+
+        if(cpuCount == 1)
+        {
+            computeState = ComputeLevel.Lvl5;
+        }
     }
 
     public void BuyGPU()
     {
         gpuCount++;
         currentCompute -= gpuCost;
+
+        if(gpuCount == 1)
+        {
+            computeState = ComputeLevel.Lvl6;
+        }
     }
 
     public void BuyGPUFarm()
     {
         gpuFarmCount++;
         currentCompute -= gpuFarmCost;
+
+        if(gpuFarmCount == 1)
+        {
+            computeState = ComputeLevel.Lvl7;
+        }
     }
 
     public void HandCompute()
