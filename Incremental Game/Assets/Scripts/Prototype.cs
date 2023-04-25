@@ -499,6 +499,7 @@ public class Prototype : MonoBehaviour
 
         if(totalCompute == gatesCost)
         {
+            Debug.Log("Gates UI Activated");
             buyGates.gameObject.SetActive(true);
             gatesSlider.gameObject.SetActive(true);
             gatesCountText.gameObject.SetActive(true);
@@ -506,6 +507,7 @@ public class Prototype : MonoBehaviour
 
         if(totalCompute == icCost)
         {
+            Debug.Log("IC UI Activated");
             buyIc.gameObject.SetActive(true);
             icSlider.gameObject.SetActive(true);
             icCountText.gameObject.SetActive(true);
@@ -625,7 +627,7 @@ public class Prototype : MonoBehaviour
             
             //Compute
             currentCompute += handCompute;
-            totalCompute = currentCompute;
+            totalCompute += handCompute;
 
             //reset timer
             handTimer = 0;

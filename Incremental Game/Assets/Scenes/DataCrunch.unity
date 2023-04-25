@@ -2981,13 +2981,13 @@ MonoBehaviour:
   cpuCooldown: 5
   gpuCooldown: 9
   gpuFarmCooldown: 12
-  transistorCost: 100
-  gatesCost: 250
-  icCost: 1000
-  microprocessorCost: 5000
-  cpuCost: 20000
-  gpuCost: 25000
-  gpuFarmCost: 75000
+  transistorCost: 25
+  gatesCost: 100
+  icCost: 250
+  microprocessorCost: 500
+  cpuCost: 1000
+  gpuCost: 1500
+  gpuFarmCost: 3000
   transistorIncrement: 1.2
   gatesIncrement: 1.5
   microprocessorIncrement: 2
