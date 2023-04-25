@@ -158,7 +158,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -420.69116, y: 238}
+  m_AnchoredPosition: {x: -420.69116, y: -231}
   m_SizeDelta: {x: 106.6177, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &244245980
@@ -430,7 +430,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 393.7, y: -139.5}
+  m_AnchoredPosition: {x: -360, y: 169}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &493480039
@@ -874,22 +874,76 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   totalCompute: 0
-  baseCompute: 5
   currentCompute: 0
+  handCompute: 0
+  transistorCompute: 0
+  gatesCompute: 0
+  icCompute: 0
+  microprocessorCompute: 0
+  cpuCompute: 0
+  gpuCompute: 0
+  gpuFarmCompute: 0
+  handCheck: 0
+  transistorLive: 0
+  gatesLive: 0
+  icLive: 0
+  microprocessorLive: 0
+  cpuLive: 0
+  gpuLive: 0
+  gpuFarmLive: 0
+  handTimer: 0
+  handCooldown: 0
+  transistorTimer: 0
+  transistorCooldown: 0
+  gatesTimer: 0
+  gatesCooldown: 0
+  icTimer: 0
+  icCooldown: 0
+  microprocessorTimer: 0
+  microprocessorCooldown: 0
+  cpuTimer: 0
+  cpuCooldown: 0
+  gpuTimer: 0
+  gpuCooldown: 0
+  gpuFarmTimer: 0
+  gpuFarmCooldown: 0
+  transistorCost: 0
+  gatesCost: 0
+  icCost: 0
+  microprocessorCost: 0
+  cpuCost: 0
+  gpuCost: 0
+  gpuFarmCost: 0
   transistorIncrement: 1.2
   gatesIncrement: 1.5
-  icIncrement: 2
-  processingUnitsIncrement: 2.5
+  microprocessorIncrement: 2
+  cpuIncrement: 2.5
+  gpuIncrement: 3
+  gpuFarmIncrement: 3.5
   computeButton: {fileID: 0}
   buyTransistor: {fileID: 493480039}
   buyGates: {fileID: 0}
   buyIc: {fileID: 0}
-  buyProcessingUnits: {fileID: 0}
-  computeText: {fileID: 1814381342}
+  buyMicroprocessors: {fileID: 0}
+  buyCpus: {fileID: 0}
+  buyGpus: {fileID: 0}
+  buyGpuFarms: {fileID: 0}
+  transistorSlider: {fileID: 0}
+  gatesSlider: {fileID: 0}
+  icSlider: {fileID: 0}
+  microprocessorSlider: {fileID: 0}
+  cpuSlider: {fileID: 0}
+  gpuSlider: {fileID: 0}
+  gpuFarmSlider: {fileID: 0}
+  totalText: {fileID: 0}
+  currentComputeText: {fileID: 0}
   transistorCount: 0
   gatesCount: 0
   icCount: 0
-  processingUnitsCount: 0
+  microprocessorCount: 0
+  cpuCount: 0
+  gpuCount: 0
+  gpuFarmCount: 0
 --- !u!1 &1078702339
 GameObject:
   m_ObjectHideFlags: 0
@@ -948,9 +1002,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Transistor
-
-    Cost : 100'
+  m_text: 'Transistor Cost : 100'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -977,8 +1029,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 15
+  m_fontSizeBase: 15
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 0
@@ -1040,7 +1092,7 @@ GameObject:
   - component: {fileID: 1263192561}
   - component: {fileID: 1263192560}
   m_Layer: 5
-  m_Name: Transistor Button (1)
+  m_Name: Hand Compute
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1064,7 +1116,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 393.7, y: -222.4}
+  m_AnchoredPosition: {x: 393.7, y: 216}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1263192560
@@ -1196,7 +1248,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 47.811, y: 238}
+  m_AnchoredPosition: {x: 47.811, y: -231}
   m_SizeDelta: {x: 830.38, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1814381342
