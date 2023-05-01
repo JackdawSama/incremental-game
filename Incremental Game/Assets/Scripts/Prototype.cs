@@ -6,46 +6,27 @@ using TMPro;
 
 public class Prototype : MonoBehaviour
 {
+    [Header("Component References")]
+
+    [SerializeField] ComponentSys transistor;
+    [SerializeField] ComponentSys gates;
+    [SerializeField] ComponentSys ic;
+    [SerializeField] ComponentSys microprocessor;
+    [SerializeField] ComponentSys cpu;
+    [SerializeField] ComponentSys gpu;
+    [SerializeField] ComponentSys gpuFarm;
+
     [Header("Compute Variables")]
-    [SerializeField] float totalCompute;
-    [SerializeField] float currentCompute;
+    public float totalCompute;
+    public float currentCompute;
     [SerializeField] float handCompute;
-    [SerializeField] float transistorCompute;
-    [SerializeField] float gatesCompute;
-    [SerializeField] float icCompute;
-    [SerializeField] float microprocessorCompute;
-    [SerializeField] float cpuCompute;
-    [SerializeField] float gpuCompute;
-    [SerializeField] float gpuFarmCompute;
 
     [Header("Compute Checks")]
     [SerializeField] bool handCheck;
-    [SerializeField] bool transistorLive;
-    [SerializeField] bool gatesLive;
-    [SerializeField] bool icLive;
-    [SerializeField] bool microprocessorLive;
-    [SerializeField] bool cpuLive;
-    [SerializeField] bool gpuLive;
-    [SerializeField] bool gpuFarmLive;
-
 
     [Header("Timer Variables")]
     float handTimer;
     [SerializeField] float handCooldown;
-    float transistorTimer;
-    [SerializeField] float transistorCooldown;
-    float gatesTimer;
-    [SerializeField] float gatesCooldown;
-    float icTimer;
-    [SerializeField] float icCooldown;
-    float microprocessorTimer;
-    [SerializeField] float microprocessorCooldown;
-    float cpuTimer;
-    [SerializeField] float cpuCooldown;
-    float gpuTimer;
-    [SerializeField] float gpuCooldown;
-    float gpuFarmTimer;
-    [SerializeField] float gpuFarmCooldown;
 
     [Header("Cost Variables")]
     [SerializeField] float transistorCost;
@@ -95,37 +76,13 @@ public class Prototype : MonoBehaviour
     [SerializeField] TextMeshProUGUI gpuCountText;
     [SerializeField] TextMeshProUGUI gpuFarmCountText;
 
-
-    [Header("Units Count")]
-    [SerializeField] int transistorCount = 0;
-    [SerializeField] int gatesCount = 0;
-    [SerializeField] int icCount = 0;
-    [SerializeField] int microprocessorCount = 0;
-    [SerializeField] int cpuCount = 0;
-    [SerializeField] int gpuCount = 0;
-    [SerializeField] int gpuFarmCount = 0;
-
     void Start()
     {
+        //Set all Component References to Inactive
+
+
         //Set All Timers to 0
         handTimer = 0;
-        transistorTimer = 0;
-        gatesTimer = 0;
-        icTimer = 0;
-        microprocessorTimer = 0;
-        cpuTimer = 0;
-
-        //Set initial computing level to 0
-        computeState = ComputeLevel.Lvl0;
-
-        //Set all units to false
-        transistorLive = false;
-        gatesLive = false;
-        icLive = false;
-        microprocessorLive = false;
-        cpuLive = false;
-        gpuLive = false;
-        gpuFarmLive = false;
 
         //Set checks
         handCheck = true;
@@ -178,20 +135,19 @@ public class Prototype : MonoBehaviour
 
         //Set UI Sliders Max Val
         handSlider.maxValue = handCooldown;
-        transistorSlider.maxValue = transistorCooldown;
-        gatesSlider.maxValue = gatesCooldown;
-        icSlider.maxValue = icCooldown;
-        microprocessorSlider.maxValue = microprocessorCooldown;
-        cpuSlider.maxValue = cpuCooldown;
-        gpuSlider.maxValue = gpuCooldown;
-        gpuFarmSlider.maxValue = gpuFarmCooldown; 
+        transistorSlider.maxValue = transistor.cooldown;
+        gatesSlider.maxValue = gates.cooldown;
+        icSlider.maxValue = ic.cooldown;
+        microprocessorSlider.maxValue = microprocessor.cooldown;
+        cpuSlider.maxValue = cpu.cooldown;
+        gpuSlider.maxValue = gpu.cooldown;
+        gpuFarmSlider.maxValue = gpuFarm.cooldown; 
     }
 
     void Update()
     {
         ActivateUI();
         CostsCheck();
-        ComputeHandler();
         UpdateUI();
 
         if(!handCheck)
@@ -206,286 +162,30 @@ public class Prototype : MonoBehaviour
         }
     }
 
-    ComputeLevel computeState;
-    public enum ComputeLevel
-    {
-        Lvl0,
-        Lvl1,
-        Lvl2,
-        Lvl3,
-        Lvl4,
-        Lvl5,
-        Lvl6,
-        Lvl7
-           
-    }
-
     void UpdateUI()
     {
         //Update UI Sliders
         handSlider.value = handTimer;
-        transistorSlider.value = transistorTimer;
-        gatesSlider.value = gatesTimer;
-        icSlider.value = icTimer;
-        microprocessorSlider.value = microprocessorTimer;
-        cpuSlider.value = cpuTimer;
-        gpuSlider.value = gpuTimer;
-        gpuFarmSlider.value = gpuFarmTimer;
+        transistorSlider.value = transistor.timer;
+        gatesSlider.value = gates.timer;
+        icSlider.value = ic.timer;
+        microprocessorSlider.value = microprocessor.timer;
+        cpuSlider.value = cpu.timer;
+        gpuSlider.value = gpu.timer;
+        gpuFarmSlider.value = gpuFarm.timer;
 
         //Update Data Text
         totalText.text = totalCompute.ToString();
         currentComputeText.text = currentCompute.ToString();
 
         //Update Count Text
-        transistorCountText.text = transistorCount.ToString();
-        gatesCountText.text = gatesCount.ToString();
-        icCountText.text = icCount.ToString();
-        microprocessorCountText.text = microprocessorCount.ToString();
-        cpuCountText.text = cpuCount.ToString();
-        gpuCountText.text = gpuCount.ToString();
-        gpuFarmCountText.text = gpuFarmCount.ToString();
-    }
-
-    public void ComputeHandler()
-    {
-        switch (computeState)
-        {
-            case ComputeLevel.Lvl0:                 //Initial state. Hand Compute.
-                break;
-
-            case ComputeLevel.Lvl1:                 //Transistor State. 1 transistor = 1 data/second
-                
-                transistorTimer += Time.deltaTime;
-
-                if(transistorTimer >= transistorCooldown)
-                {
-                    TransistorCompute();
-                    transistorTimer = 0;
-                }
-
-                break;
-            
-            case ComputeLevel.Lvl2:                 //Gates State. 1 gate = 5 data/second
-
-                transistorTimer += Time.deltaTime;
-                gatesTimer += Time.deltaTime;
-
-                if(transistorTimer >= transistorCooldown)
-                {
-                    TransistorCompute();
-                    transistorTimer = 0;
-                }
-
-                if(gatesTimer >= gatesCooldown)
-                {
-                    GatesCompute();
-                    gatesTimer = 0;
-                }
-
-                break;
-            
-            case ComputeLevel.Lvl3:                 //IC State. 1 IC = 20 data/second
-
-                transistorTimer += Time.deltaTime;
-                gatesTimer += Time.deltaTime;
-                icTimer += Time.deltaTime;
-
-                if(transistorTimer >= transistorCooldown)
-                {
-                    TransistorCompute();
-                    transistorTimer = 0;
-                }
-
-                if(gatesTimer >= gatesCooldown)
-                {
-                    GatesCompute();
-                    gatesTimer = 0;
-                }
-
-                if(icTimer >= icCooldown)
-                {
-                    ICCompute();
-                    icTimer = 0;
-                }
-
-                break;
-
-            case ComputeLevel.Lvl4:                 //Microprocessor State. 1 Microprocessor = 1 data/second
-                
-                transistorTimer += Time.deltaTime;
-                gatesTimer += Time.deltaTime;
-                icTimer += Time.deltaTime;
-                microprocessorTimer += Time.deltaTime;
-
-                if(transistorTimer >= transistorCooldown)
-                {
-                    TransistorCompute();
-                    transistorTimer = 0;
-                }
-
-                if(gatesTimer >= gatesCooldown)
-                {
-                    GatesCompute();
-                    gatesTimer = 0;
-                }
-                
-                if(icTimer >= icCooldown)
-                {
-                    ICCompute();
-                    icTimer = 0;
-                }
-
-                if(microprocessorTimer >= microprocessorCooldown)
-                {
-                    MicroprocessorCompute();
-                    microprocessorTimer = 0;
-                }
-
-                break;
-
-            case ComputeLevel.Lvl5:                 //CPU State. 1 CPU = 1 data/second
-                
-                transistorTimer += Time.deltaTime;
-                gatesTimer += Time.deltaTime;
-                icTimer += Time.deltaTime;
-                microprocessorTimer += Time.deltaTime;
-                cpuTimer += Time.deltaTime;
-
-                if(transistorTimer >= transistorCooldown)
-                {
-                    TransistorCompute();
-                    transistorTimer = 0;
-                }
-
-                if(gatesTimer >= gatesCooldown)
-                {
-                    GatesCompute();
-                    gatesTimer = 0;
-                }
-
-                if(icTimer >= icCooldown)
-                {
-                    ICCompute();
-                    icTimer = 0;
-                }
-
-                if(microprocessorTimer >= microprocessorCooldown)
-                {
-                    MicroprocessorCompute();
-                    microprocessorTimer = 0;
-                }
-
-                if(cpuTimer >= cpuCooldown)
-                {
-                    CPUCompute();
-                    cpuTimer = 0;
-                }
-
-                break;
-            
-            case ComputeLevel.Lvl6:                 //GPU State. 1 GPU = 1 data/second
-                
-                transistorTimer += Time.deltaTime;
-                gatesTimer += Time.deltaTime;
-                icTimer += Time.deltaTime;
-                microprocessorTimer += Time.deltaTime;
-                cpuTimer += Time.deltaTime;
-                gpuTimer += Time.deltaTime;
-
-                if(transistorTimer >= transistorCooldown)
-                {
-                    TransistorCompute();
-                    transistorTimer = 0;
-                }
-
-                if(gatesTimer >= gatesCooldown)
-                {
-                    GatesCompute();
-                    gatesTimer = 0;
-                }
-
-                if(icTimer >= icCooldown)
-                {
-                    ICCompute();
-                    icTimer = 0;
-                }
-
-                if(microprocessorTimer >= microprocessorCooldown)
-                {
-                    MicroprocessorCompute();
-                    microprocessorTimer = 0;
-                }
-
-                if(cpuTimer >= cpuCooldown)
-                {
-                    CPUCompute();
-                    cpuTimer = 0;
-                }
-
-                if(gpuTimer >= gpuCooldown)
-                {
-                    GPUCompute();
-                    gpuTimer = 0;
-                }
-
-                break;
-
-            case ComputeLevel.Lvl7:                 //GPU Farms State. 1 GPU Farm = 1 data/second
-                
-                transistorTimer += Time.deltaTime;
-                gatesTimer += Time.deltaTime;
-                icTimer += Time.deltaTime;
-                microprocessorTimer += Time.deltaTime;
-                cpuTimer += Time.deltaTime;
-                gpuTimer += Time.deltaTime;
-                gpuFarmTimer += Time.deltaTime;
-
-                if(transistorTimer >= transistorCooldown)
-                {
-                    TransistorCompute();
-                    transistorTimer = 0;
-                }
-
-                if(gatesTimer >= gatesCooldown)
-                {
-                    GatesCompute();
-                    gatesTimer = 0;
-                }
-
-                if(icTimer >= icCooldown)
-                {
-                    ICCompute();
-                    icTimer = 0;
-                }
-
-                if(microprocessorTimer >= microprocessorCooldown)
-                {
-                    MicroprocessorCompute();
-                    microprocessorTimer = 0;
-                }
-
-                if(cpuTimer >= cpuCooldown)
-                {
-                    CPUCompute();
-                    cpuTimer = 0;
-                }
-
-                if(gpuTimer >= gpuCooldown)
-                {
-                    GPUCompute();
-                    gpuTimer = 0;
-                }
-
-                if(gpuFarmTimer >= gpuFarmCooldown)
-                {
-                    GPUFarmCompute();
-                    gpuFarmTimer = 0;
-                }
-                break;
-
-            default:
-                break;
-        }
+        transistorCountText.text = transistor.count.ToString();
+        gatesCountText.text = gates.count.ToString();
+        icCountText.text = ic.count.ToString();
+        microprocessorCountText.text = microprocessor.count.ToString();
+        cpuCountText.text = cpu.count.ToString();
+        gpuCountText.text = gpu.count.ToString();
+        gpuFarmCountText.text = gpuFarm.count.ToString();
     }
 
     public void ActivateUI()
@@ -544,79 +244,44 @@ public class Prototype : MonoBehaviour
 
     public void BuyTransistor()
     {
-        transistorCount++;
+        transistor.Buy();
         currentCompute -= transistorCost;
-
-        if(transistorCount == 1)
-        {
-            computeState = ComputeLevel.Lvl1;
-        }
     }
 
     public void BuyGates()
     {
-        gatesCount++;
+        gates.Buy();
         currentCompute -= gatesCost;
-
-        if(gatesCount == 1)
-        {
-            computeState = ComputeLevel.Lvl2;
-        }
     }
 
     public void BuyIC()
     {
-        icCount++;
+        ic.Buy();
         currentCompute -= icCost;
-
-        if(icCount == 1)
-        {
-            computeState = ComputeLevel.Lvl3;
-        }
     }
 
     public void BuyMicroprocessor()
     {
-        microprocessorCount++;
+        microprocessor.Buy();
         currentCompute -= microprocessorCost;
-
-        if(microprocessorCount == 1)
-        {
-            computeState = ComputeLevel.Lvl4;
-        }
     }
 
     public void BuyCPU()
     {
-        cpuCount++;
+        cpu.Buy();
         currentCompute -= cpuCost;
-
-        if(cpuCount == 1)
-        {
-            computeState = ComputeLevel.Lvl5;
-        }
     }
 
     public void BuyGPU()
     {
-        gpuCount++;
+        gpu.Buy();
         currentCompute -= gpuCost;
-
-        if(gpuCount == 1)
-        {
-            computeState = ComputeLevel.Lvl6;
-        }
     }
 
     public void BuyGPUFarm()
     {
-        gpuFarmCount++;
+        gpu.Buy();
         currentCompute -= gpuFarmCost;
-
-        if(gpuFarmCount == 1)
-        {
-            computeState = ComputeLevel.Lvl7;
-        }
     }
 
     public void HandCompute()
@@ -632,73 +297,6 @@ public class Prototype : MonoBehaviour
             //reset timer
             handTimer = 0;
         }
-    }
-
-    private void TransistorCompute()
-    {
-        //Compute
-        currentCompute += transistorCompute * transistorCount;
-        totalCompute += transistorCompute * transistorCount;
-
-        //reset timer
-        transistorTimer = 0;
-    }
-
-    private void GatesCompute()
-    {
-        //Compute
-        currentCompute += gatesCompute * gatesCount;
-        totalCompute += gatesCompute * gatesCount;
-
-        //reset timer
-        gatesTimer = 0;
-    }
-
-    private void ICCompute()
-    {
-        //Compute
-        currentCompute += icCompute * icCount;
-        totalCompute += icCompute * icCount;
-
-        //reset timer
-        icTimer = 0;
-    }
-
-    private void MicroprocessorCompute()
-    {
-        //Compute
-        currentCompute += microprocessorCompute * microprocessorCount;
-        totalCompute += microprocessorCompute * microprocessorCount;
-
-        //reset timer
-        microprocessorTimer = 0;
-    }
-
-    private void CPUCompute()
-    {
-        //Compute
-        currentCompute += cpuCompute * cpuCount;
-        totalCompute += cpuCompute * cpuCount;
-    }
-
-    private void GPUCompute()
-    {
-        //Compute
-        currentCompute += gpuCompute * gpuCount;
-        totalCompute += gpuCompute;
-
-        //reset timer
-        gpuTimer = 0;
-    }
-
-    private void GPUFarmCompute()
-    {
-        //Compute
-        currentCompute += gpuFarmCompute * gpuFarmCount;
-        totalCompute += gpuFarmCompute * gpuFarmCount;
-
-        //reset timer
-        gpuFarmTimer = 0;
     }
 
     #region COST CHECKS
