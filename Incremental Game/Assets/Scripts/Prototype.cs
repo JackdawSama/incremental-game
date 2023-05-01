@@ -7,7 +7,6 @@ using TMPro;
 public class Prototype : MonoBehaviour
 {
     [Header("Component References")]
-
     [SerializeField] ComponentSys transistor;
     [SerializeField] ComponentSys gates;
     [SerializeField] ComponentSys ic;
@@ -16,17 +15,28 @@ public class Prototype : MonoBehaviour
     [SerializeField] ComponentSys gpu;
     [SerializeField] ComponentSys gpuFarm;
 
+    [Header("Power Requirement")]
+    [SerializeField] float currentPower;
+    [SerializeField] float maxPower = 500f;
+    [SerializeField] int powerIncCount;
+
+    [SerializeField] float basePowerCost;
+    [SerializeField] float powerCost;
+
     [Header("Compute Variables")]
     public float totalCompute;
     public float currentCompute;
+    public float maxCompute;
     [SerializeField] float handCompute;
 
-    [Header("Compute Checks")]
+    [Header("Checks")]
+    [SerializeField] bool gameOver = false;
     [SerializeField] bool handCheck;
 
     [Header("Timer Variables")]
     float handTimer;
     [SerializeField] float handCooldown;
+    float globalTimer;
 
     [Header("Cost Variables")]
     [SerializeField] float transistorCost;
@@ -36,14 +46,6 @@ public class Prototype : MonoBehaviour
     [SerializeField] float cpuCost;
     [SerializeField] float gpuCost;
     [SerializeField] float gpuFarmCost;
-
-    [Header("Increment Values")]
-    [SerializeField] float transistorIncrement = 1.2f;
-    [SerializeField] float gatesIncrement = 1.5f;
-    [SerializeField] float microprocessorIncrement = 2f;
-    [SerializeField] float cpuIncrement = 2.5f;
-    [SerializeField] float gpuIncrement = 3f;
-    [SerializeField] float gpuFarmIncrement = 3.5f;
 
     [Header("Button References")]
     [SerializeField] Button computeButton;
@@ -75,12 +77,10 @@ public class Prototype : MonoBehaviour
     [SerializeField] TextMeshProUGUI cpuCountText;
     [SerializeField] TextMeshProUGUI gpuCountText;
     [SerializeField] TextMeshProUGUI gpuFarmCountText;
+    [SerializeField] TextMeshProUGUI globalTimerText;
 
     void Start()
     {
-        //Set all Component References to Inactive
-
-
         //Set All Timers to 0
         handTimer = 0;
 
@@ -146,9 +146,14 @@ public class Prototype : MonoBehaviour
 
     void Update()
     {
-        ActivateUI();
-        CostsCheck();
-        UpdateUI();
+        globalTimer += Time.deltaTime;
+
+        if(!gameOver)
+        {
+            ActivateUI();
+            CostsCheck();
+            UpdateUI();
+        }
 
         if(!handCheck)
         {
@@ -159,6 +164,21 @@ public class Prototype : MonoBehaviour
         {
             handCheck = true;
             handTimer = 0;
+        }
+
+        if(currentPower >= maxPower)
+        {
+            //Set Lose state
+            gameOver = true;
+            Debug.Log("Power Surge");
+        }
+
+        if(currentCompute >= maxCompute)
+        {
+            //Set Win State
+            gameOver = true;
+
+            Debug.Log("Data Compilation Complete");
         }
     }
 
@@ -186,55 +206,56 @@ public class Prototype : MonoBehaviour
         cpuCountText.text = cpu.count.ToString();
         gpuCountText.text = gpu.count.ToString();
         gpuFarmCountText.text = gpuFarm.count.ToString();
+
+        //Update Time
+        DisplayTime(globalTimer);
     }
 
     public void ActivateUI()
     {
-        if(totalCompute == transistorCost)
+        if(totalCompute >= transistorCost)
         {
             buyTransistor.gameObject.SetActive(true);
             transistorSlider.gameObject.SetActive(true);
             transistorCountText.gameObject.SetActive(true);
         }
 
-        if(totalCompute == gatesCost)
+        if(totalCompute >= gatesCost)
         {
-            Debug.Log("Gates UI Activated");
             buyGates.gameObject.SetActive(true);
             gatesSlider.gameObject.SetActive(true);
             gatesCountText.gameObject.SetActive(true);
         }
 
-        if(totalCompute == icCost)
+        if(totalCompute >= icCost)
         {
-            Debug.Log("IC UI Activated");
             buyIc.gameObject.SetActive(true);
             icSlider.gameObject.SetActive(true);
             icCountText.gameObject.SetActive(true);
         }
 
-        if(totalCompute == microprocessorCost)
+        if(totalCompute >= microprocessorCost)
         {
             buyMicroprocessors.gameObject.SetActive(true);
             microprocessorSlider.gameObject.SetActive(true);
             microprocessorCountText.gameObject.SetActive(true);
         }
 
-        if(totalCompute == cpuCost)
+        if(totalCompute >= cpuCost)
         {
             buyCpus.gameObject.SetActive(true);
             cpuSlider.gameObject.SetActive(true);
             cpuCountText.gameObject.SetActive(true);
         }
 
-        if(totalCompute == gpuCost)
+        if(totalCompute >= gpuCost)
         {
             buyGpus.gameObject.SetActive(true);
             gpuSlider.gameObject.SetActive(true);
             gpuCountText.gameObject.SetActive(true);
         }
 
-        if(totalCompute == gpuFarmCost)
+        if(totalCompute >= gpuFarmCost)
         {
             buyGpuFarms.gameObject.SetActive(true);
             gpuFarmSlider.gameObject.SetActive(true);
@@ -245,43 +266,43 @@ public class Prototype : MonoBehaviour
     public void BuyTransistor()
     {
         transistor.Buy();
-        currentCompute -= transistorCost;
+        currentCompute -= transistor.cost;
     }
 
     public void BuyGates()
     {
         gates.Buy();
-        currentCompute -= gatesCost;
+        currentCompute -= gates.cost;
     }
 
     public void BuyIC()
     {
         ic.Buy();
-        currentCompute -= icCost;
+        currentCompute -= ic.cost;
     }
 
     public void BuyMicroprocessor()
     {
         microprocessor.Buy();
-        currentCompute -= microprocessorCost;
+        currentCompute -= microprocessor.cost;
     }
 
     public void BuyCPU()
     {
         cpu.Buy();
-        currentCompute -= cpuCost;
+        currentCompute -= cpu.cost;
     }
 
     public void BuyGPU()
     {
         gpu.Buy();
-        currentCompute -= gpuCost;
+        currentCompute -= gpu.cost;
     }
 
     public void BuyGPUFarm()
     {
-        gpu.Buy();
-        currentCompute -= gpuFarmCost;
+        gpuFarm.Buy();
+        currentCompute -= gpuFarm.cost;
     }
 
     public void HandCompute()
@@ -297,6 +318,34 @@ public class Prototype : MonoBehaviour
             //reset timer
             handTimer = 0;
         }
+    }
+
+    float CalculateCurrentPower()
+    {
+        currentPower =  transistor.power 
+                        + gates.power
+                        + ic.power
+                        + microprocessor.power
+                        + cpu.power
+                        + gpu.power
+                        + gpuFarm.power;
+
+        return currentPower;
+    }
+
+    void DisplayTime(float time)
+    {
+        float minutes = Mathf.FloorToInt(time / 60);
+        float seconds = Mathf.FloorToInt(time % 60);
+        globalTimerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
+
+    public void IncreaseMaxPower()
+    {
+        powerIncCount++;
+
+        maxPower = maxPower + (powerIncCount * 100f);
+        powerCost = basePowerCost * (1 + (powerIncCount/10f));
     }
 
     #region COST CHECKS

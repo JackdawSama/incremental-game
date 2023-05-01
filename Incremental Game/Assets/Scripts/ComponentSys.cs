@@ -12,13 +12,19 @@ public class ComponentSys : MonoBehaviour
     public int count;
     [SerializeField] float baseCompute;
     float compute;
+    [SerializeField] float  basePower = 1f;
+    public float power;
 
     [Header("Timers")]
     [HideInInspector]public float timer;
     public float cooldown;
 
     [Header("Cost Modifiers")]
+    [HideInInspector]public float cost;
+    [SerializeField] float baseCost;
     [SerializeField] float costMod;
+    [SerializeField] float deltaPowerMod = 0.05f;
+    //[SerializeField] float gammaPowerMod;
     
     void Update()
     {
@@ -57,10 +63,32 @@ public class ComponentSys : MonoBehaviour
     public void Buy()
     {
         count++;
+        PowerCost();
+        CostIncrement();
 
         if(count == 1)
         {
             isActive = true;
         }
+    }
+
+    public void PowerCost()
+    {
+        float modifier = deltaPowerMod * (1f - count/100f);
+        if(count == 0)
+        {
+            modifier = 0;
+        }
+        power = basePower * (1 + (count * modifier));
+    }
+
+    public void CostIncrement()
+    {
+        float modifier = costMod * (1f - count/10f);
+        if(count == 0)
+        {
+            modifier = 0;
+        }
+        cost = baseCost * (1 + (count * modifier));
     }
 }
