@@ -20,11 +20,20 @@ public class ComponentSys : MonoBehaviour
     public float cooldown;
 
     [Header("Cost Modifiers")]
-    [HideInInspector]public float cost;
-    [SerializeField] float baseCost;
+    public float cost;
+    public float baseCost;
     [SerializeField] float costMod;
     [SerializeField] float deltaPowerMod = 0.05f;
     //[SerializeField] float gammaPowerMod;
+
+    private void Start() 
+    {
+        //Sets base values
+        compute = baseCompute;
+        power = 0;
+        cost = baseCost;
+        
+    }
     
     void Update()
     {
@@ -63,18 +72,19 @@ public class ComponentSys : MonoBehaviour
     public void Buy()
     {
         count++;
-        PowerCost();
-        CostIncrement();
 
         if(count == 1)
         {
             isActive = true;
         }
+
+        PowerCost();
+        CostIncrement();
     }
 
     public void PowerCost()
     {
-        float modifier = deltaPowerMod * (1f - count/100f);
+        float modifier = deltaPowerMod * (1f + count/100f);
         if(count == 0)
         {
             modifier = 0;
@@ -84,11 +94,20 @@ public class ComponentSys : MonoBehaviour
 
     public void CostIncrement()
     {
-        float modifier = costMod * (1f - count/10f);
+        float modifier = costMod * (1f + count/10f);
         if(count == 0)
         {
             modifier = 0;
         }
         cost = baseCost * (1 + (count * modifier));
     }
+void OnEnable()
+{
+    count = 0;
+    compute = baseCompute;
+    power = 0;
+    cost = baseCost;
 }
+
+}
+
