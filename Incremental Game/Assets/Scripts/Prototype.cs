@@ -15,6 +15,14 @@ public class Prototype : MonoBehaviour
     [SerializeField] ComponentSys gpu;
     [SerializeField] ComponentSys gpuFarm;
 
+    [Header("Game Audio")]
+    [SerializeField] AudioSource source;
+    [SerializeField] AudioClip handComputeAudio;
+    [SerializeField] AudioClip powerUpgradeAudio;
+    [SerializeField] AudioClip componentBuyAudio;
+
+    
+
     [Header("Power Requirement")]
     [SerializeField] float currentPower;
     [SerializeField] float maxPower = 500f;
@@ -197,11 +205,13 @@ public class Prototype : MonoBehaviour
         if(!handCheck)
         {
             handTimer += Time.deltaTime;
+            computeButton.interactable = false;
         }
 
         if(handTimer >= handCooldown)
         {
             handCheck = true;
+            computeButton.interactable = true;
             handTimer = 0;
         }
 
@@ -417,6 +427,10 @@ public class Prototype : MonoBehaviour
 
     public void RestartGame()
     {
+        
+        //Play Audio
+        source.PlayOneShot(componentBuyAudio);
+
         //Renable Systems
         transistor.gameObject.SetActive(true);
         gates.gameObject.SetActive(true);
@@ -533,42 +547,63 @@ public class Prototype : MonoBehaviour
 
     public void BuyTransistor()
     {
+        //Play Audio
+        source.PlayOneShot(componentBuyAudio);
+
         currentCompute -= transistor.cost;
         transistor.Buy();
     }
 
     public void BuyGates()
     {
+        //Play Audio
+        source.PlayOneShot(componentBuyAudio);
+
         currentCompute -= gates.cost;
         gates.Buy();
     }
 
     public void BuyIC()
     {
+        //Play Audio
+        source.PlayOneShot(componentBuyAudio);
+
         currentCompute -= ic.cost;
         ic.Buy();
     }
 
     public void BuyMicroprocessor()
     {
+        //Play Audio
+        source.PlayOneShot(componentBuyAudio);
+
         currentCompute -= microprocessor.cost;
         microprocessor.Buy();
     }
 
     public void BuyCPU()
     {
+        //Play Audio
+        source.PlayOneShot(componentBuyAudio);
+
         currentCompute -= cpu.cost;
         cpu.Buy();
     }
 
     public void BuyGPU()
     {
+        //Play Audio
+        source.PlayOneShot(componentBuyAudio);
+
         currentCompute -= gpu.cost;
         gpu.Buy();
     }
 
     public void BuyGPUFarm()
     {
+        //Play Audio
+        source.PlayOneShot(componentBuyAudio);
+
         currentCompute -= gpuFarm.cost;
         gpuFarm.Buy();
     }
@@ -577,6 +612,8 @@ public class Prototype : MonoBehaviour
     {
         if(handCheck)
         {
+            //Play Audio
+            source.PlayOneShot(handComputeAudio);
             handCheck = false;
             
             //Compute
@@ -628,6 +665,9 @@ public class Prototype : MonoBehaviour
 
     public void IncreaseMaxPower()
     {
+        //Play Audio
+        source.PlayOneShot(powerUpgradeAudio);
+        
         powerIncCount++;
 
         maxPower = maxPower + (powerIncCount * 50f);
