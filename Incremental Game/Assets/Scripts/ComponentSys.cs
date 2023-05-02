@@ -32,7 +32,7 @@ public class ComponentSys : MonoBehaviour
         compute = baseCompute;
         power = 0;
         cost = baseCost;
-        
+        isActive = false;
     }
     
     void Update()
@@ -107,6 +107,7 @@ void OnEnable()
     compute = baseCompute;
     power = 0;
     cost = baseCost;
+    isActive = false;
 }
 
 }

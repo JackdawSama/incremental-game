@@ -45,6 +45,7 @@ public class Prototype : MonoBehaviour
     [SerializeField] TextMeshProUGUI powerHeadingText;
 
     [Header("Button References")]
+    [SerializeField] Button restartGameButton;
     [SerializeField] Button computeButton;
     [SerializeField] Button buyTransistor;
     [SerializeField] Button buyGates;
@@ -114,6 +115,7 @@ public class Prototype : MonoBehaviour
 
         //Set GameOver text to Inactive
         gameOverText.gameObject.SetActive(false);
+        restartGameButton.gameObject.SetActive(false);
 
         //Set All Buttons to Inactive
         buyTransistor.gameObject.SetActive(false);
@@ -213,6 +215,8 @@ public class Prototype : MonoBehaviour
             gameOverText.text = "Power Surge @ : " + globalTimerText.text +
                                 "\n" + "All Data Corrupted";
 
+            restartGameButton.gameObject.SetActive(true);
+            DeactivateSystems();
         }
 
         if(totalCompute >= maxCompute)
@@ -230,6 +234,9 @@ public class Prototype : MonoBehaviour
                                        + cpu.count + " CPUs" + "\n" +
                                        + gpu.count + " GPUs" + "\n" +
                                        + gpuFarm.count + " GPU Farms";
+
+            restartGameButton.gameObject.SetActive(true);
+            DeactivateSystems();
         }
     }
 
@@ -387,7 +394,6 @@ public class Prototype : MonoBehaviour
         costHeadingText.gameObject.SetActive(false);
         powerHeadingText.gameObject.SetActive(false);
 
-
         //Set all button interactability to false
         buyTransistor.interactable = false;
         buyGates.interactable = false;
@@ -409,23 +415,41 @@ public class Prototype : MonoBehaviour
         gpuFarm.gameObject.SetActive(false);
     }
 
-    void RestartGame()
+    public void RestartGame()
     {
-        //Set Costs
+        //Renable Systems
+        transistor.gameObject.SetActive(true);
+        gates.gameObject.SetActive(true);
+        ic.gameObject.SetActive(true);
+        microprocessor.gameObject.SetActive(true);
+        cpu.gameObject.SetActive(true);
+        gpu.gameObject.SetActive(true);
+        gpuFarm.gameObject.SetActive(true);
+
+        //Reset Values
+        totalCompute = 0;
+        currentCompute = 0;
+        currentPower = 0;
+
+        //Reset Costs
         powerCost = basePowerCost;
 
-        //Set All Timers to 0
+        //Reset All Timers to 0
         globalTimer = 0;
         handTimer = 0;
 
-        //Set checks
+        //Reset checks
         handCheck = true;
         gameOver = false;
 
-        //Set GameOver text to Inactive
+        //Reset GameOver text to Inactive
         gameOverText.gameObject.SetActive(false);
+        restartGameButton.gameObject.SetActive(false);
 
-        //Set All Buttons to Inactive
+        //Reset Compute Button to Active
+        computeButton.gameObject.SetActive(true);
+
+        //Reset All Buttons to Inactive
         buyTransistor.gameObject.SetActive(false);
         buyGates.gameObject.SetActive(false);
         buyIc.gameObject.SetActive(false);
@@ -434,7 +458,13 @@ public class Prototype : MonoBehaviour
         buyGpus.gameObject.SetActive(false);
         buyGpuFarms.gameObject.SetActive(false);
 
-        //Set All Sliders to Inactive
+        //Reset Upgrade Power Button to Active
+        buyPower.gameObject.SetActive(true);
+
+        //Reset Compute Slider to Active
+        handSlider.gameObject.SetActive(true);
+
+        //Reset All Sliders to Inactive
         transistorSlider.gameObject.SetActive(false);
         gatesSlider.gameObject.SetActive(false);
         icSlider.gameObject.SetActive(false);
@@ -443,7 +473,7 @@ public class Prototype : MonoBehaviour
         gpuSlider.gameObject.SetActive(false);
         gpuFarmSlider.gameObject.SetActive(false);
 
-        //Set All Count Text to Inactive
+        //Reset All Count Text to Inactive
         transistorCountText.gameObject.SetActive(false);
         gatesCountText.gameObject.SetActive(false);
         icCountText.gameObject.SetActive(false);
@@ -452,7 +482,7 @@ public class Prototype : MonoBehaviour
         gpuCountText.gameObject.SetActive(false);
         gpuFarmCountText.gameObject.SetActive(false);
 
-        //Set All Cost Text to Inactive
+        //Reset All Cost Text to Inactive
         transistorCostText.gameObject.SetActive(false);
         gatesCostText.gameObject.SetActive(false);
         icCostText.gameObject.SetActive(false);
@@ -461,7 +491,17 @@ public class Prototype : MonoBehaviour
         gpuCostText.gameObject.SetActive(false);
         gpuFarmCostText.gameObject.SetActive(false);
 
-        //Set all button interactability to false
+        //Set All Power Text to Active
+        powerCostText.gameObject.SetActive(true);
+        powerText.gameObject.SetActive(true);
+
+        //Set All Heading Text to Active
+        unitHeadingText.gameObject.SetActive(true);
+        countHeadingText.gameObject.SetActive(true);
+        costHeadingText.gameObject.SetActive(true);
+        powerHeadingText.gameObject.SetActive(true);
+
+        //Reset all button interactability to false
         buyTransistor.interactable = false;
         buyGates.interactable = false;
         buyIc.interactable = false;
@@ -470,7 +510,7 @@ public class Prototype : MonoBehaviour
         buyGpus.interactable = false;
         buyGpuFarms.interactable = false;
 
-        //Set UI Sliders Min Val
+        //Reset UI Sliders Min Val
         handSlider.minValue = 0;
         transistorSlider.minValue = 0;
         gatesSlider.minValue = 0;
@@ -480,7 +520,7 @@ public class Prototype : MonoBehaviour
         gpuSlider.minValue = 0;
         gpuFarmSlider.minValue = 0;
 
-        //Set UI Sliders Max Val
+        //Reset UI Sliders Max Val
         handSlider.maxValue = handCooldown;
         transistorSlider.maxValue = transistor.cooldown;
         gatesSlider.maxValue = gates.cooldown;
@@ -489,15 +529,6 @@ public class Prototype : MonoBehaviour
         cpuSlider.maxValue = cpu.cooldown;
         gpuSlider.maxValue = gpu.cooldown;
         gpuFarmSlider.maxValue = gpuFarm.cooldown;
-
-        //Renable Systems
-        transistor.gameObject.SetActive(true);
-        gates.gameObject.SetActive(true);
-        ic.gameObject.SetActive(true);
-        microprocessor.gameObject.SetActive(true);
-        cpu.gameObject.SetActive(true);
-        gpu.gameObject.SetActive(true);
-        gpuFarm.gameObject.SetActive(true);
     }
 
     public void BuyTransistor()
